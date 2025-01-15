@@ -41,8 +41,3 @@ async def main():
 
 
 asyncio.run(main())
-
-"""
-aiohttp 3.11.11
-Brotli 1.1.0
-"""
