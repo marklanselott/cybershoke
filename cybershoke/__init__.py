@@ -92,7 +92,11 @@ class Category(Enum):
     TIER_1_2_EASY = "TIER 1-2 - EASY"
     TIER_3_5_HARD = "TIER 3-5 - HARD"
 
-    mode_withot_category = []
+    mode_withot_category = [
+        Mode._2X2,  Mode._5X5, Mode.AIMDM, Mode.ARENA,
+        Mode.AWPDM, Mode.HSDM, Mode.MULTICFGDM, 
+        Mode.PISTOLRETAKE, Mode.SURFCOMBAT
+    ]
 
 class Map(Enum):
     DE_MIRAGE_FPS = "de_mirage_fps"
