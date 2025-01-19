@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="cybershoke",
-    version="0.1.3",
+    version="0.1.4",
     description="",
     author="marklanselot",
     author_email="markrybitskij@gmail.com",
