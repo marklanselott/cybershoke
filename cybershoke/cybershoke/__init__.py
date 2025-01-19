@@ -58,7 +58,7 @@ class Category(Enum):
     ONLY_AWP_LEGO_2 = "ONLY AWP LEGO 2"
 
     # BHOP
-    TIER_1_2_EASY = "TIER 1-2 - EASY"
+    TIER_1_2_EASY = "TIER 1-2 - EASY" # yes SURF
     TIER_3_4_MEDIUM = "TIER 3-4 - MEDIUM"
 
     # CLUTCH
@@ -89,7 +89,6 @@ class Category(Enum):
 
     # SURF
     TIER_1_BEGINNER = "TIER 1 - BEGINNER"
-    TIER_1_2_EASY = "TIER 1-2 - EASY"
     TIER_3_5_HARD = "TIER 3-5 - HARD"
 
     mode_withot_category = [
