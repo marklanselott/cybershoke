@@ -43,6 +43,8 @@ class Mode(Enum):
     SURFCOMBAT = "SURFCOMBAT"
 
 class Category(Enum):
+    null = ""
+
     # DM | DEATHRUN
     EASY = "EASY" # yes MANIAC
     MEDIUM = "MEDIUM" # not DEATHRUN | yes PISTOLDM
@@ -125,7 +127,7 @@ async def get_servers(
 
             if category.value in servers[mode.value] or mode in Category.mode_withot_category:
 
-                if mode in Category.mode_withot_category: category.value = ""
+                if mode in Category.mode_withot_category: category = Category.null
                     
                 servers = servers[mode.value][category.value]
                 ok_servers = []
