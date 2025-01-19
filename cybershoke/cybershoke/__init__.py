@@ -1,10 +1,6 @@
 from aiohttp import ClientSession
 from enum import Enum
 
-class Category(Enum):
-    EASY = "EASY"
-    MEDIUM = "MEDIUM"
-
 class Location(Enum):
     Kyiv ="kiev"
     Warsaw = "warsaw"
@@ -46,6 +42,62 @@ class Mode(Enum):
     SURF = "SURF"
     SURFCOMBAT = "SURFCOMBAT"
 
+class Category(Enum):
+    # DM | DEATHRUN
+    EASY = "EASY" # yes MANIAC
+    MEDIUM = "MEDIUM" # not DEATHRUN | yes PISTOLDM
+
+    # DUELS | DUELS2X2 | PUBLIC
+    ARENA_MAPS = "ARENA MAPS" # not DUELS2X2, PUBLIC
+    ONLY_DUST2 = "ONLY DUST2"
+    ONLY_MIRAGE = "ONLY MIRAGE"
+    ALL_MAPS = "ALL MAPS"
+
+    # AWP
+    AWP_CANNONS = "AWP CANNONS"
+    ONLY_AWP_LEGO_2 = "ONLY AWP LEGO 2"
+
+    # BHOP
+    TIER_1_2_EASY = "TIER 1-2 - EASY"
+    TIER_3_4_MEDIUM = "TIER 3-4 - MEDIUM"
+
+    # CLUTCH
+    _2VS5 = "2VS5"
+    _1VS3 = "1VS3"
+
+    # EXECUTE | RETAKE | RETAKECARDS
+    _9_SLOTS = "9 SLOTS" # not RETAKECARDS
+    _7_SLOTS = "7 SLOTS" 
+
+    # HNS
+    RULES = "RULES"
+    TRAINING = "TRAINING"
+
+    # KZ
+    TIER_1_2 = "TIER 1-2"
+    TIER_3_4 = "TIER 3-4"
+    TIER_5_6 = "TIER 5-6"
+
+    # MANIAC
+    CLASSIC = "CLASSIC"
+
+    # MINIGAMES
+    FUN_MAPS = "FUN MAPS"
+
+    # PISTOLDM
+    HSDM = "HSDM"
+
+    # SURF
+    TIER_1_BEGINNER = "TIER 1 - BEGINNER"
+    TIER_1_2_EASY = "TIER 1-2 - EASY"
+    TIER_3_5_HARD = "TIER 3-5 - HARD"
+
+    mode_withot_category = [
+        Mode._2X2,  Mode._5X5, Mode.AIMDM, Mode.ARENA,
+        Mode.AWPDM, Mode.HSDM, Mode.MULTICFGDM, 
+        Mode.PISTOLRETAKE, Mode.SURFCOMBAT
+    ]
+
 class Map(Enum):
     DE_MIRAGE_FPS = "de_mirage_fps"
     DE_MIRAGE = "de_mirage"
@@ -66,35 +118,39 @@ async def get_servers(
     url = f"https://api.cybershoke.net/api/v2/main/data"
 
     async with session.get(url) as response:
-        if response.status == 200:
-            data = await response.json()
+        data = await response.json()
 
-            servers = data['data']['modules']['servers']['data']['servers']['2']
+        servers = data['data']['modules']['servers']['data']['servers']['2']
 
-            if mode.value in servers:
-                if category.value in servers[mode.value]:
+        if mode.value in servers:
 
-                    servers = servers[mode.value][category.value]
-                    ok_servers = []
+            if category.value in servers[mode.value] or mode in Category.mode_withot_category:
 
-                    for server in servers:
+                if mode in Category.mode_withot_category: category.value = ""
+                    
+                servers = servers[mode.value][category.value]
+                ok_servers = []
 
-                        if location:
-                            if server['location'] != location.value: continue
+                for server in servers:
 
-                        if map:
-                            if server['map'] != map.value: continue
+                    if location:
+                        if server['location'] != location.value: continue
 
-                        if people_now and len(people_now)==2:
-                            if \
-                                server['players'] >= people_now[0] \
-                                and\
-                                server['players'] <= people_now[1]: pass
-                            else: continue
+                    if map:
+                        if server['map'] != map.value: continue
 
-                        if max_people_on_server:
-                            if server['maxplayers'] < max_people_on_server: continue
+                    if people_now and len(people_now)==2:
+                        if \
+                            server['players'] >= people_now[0] \
+                            and\
+                            server['players'] <= people_now[1]: pass
+                        else: continue
+
+                    if max_people_on_server:
+                        if server['maxplayers'] < max_people_on_server: continue
                                 
-                        
-                        ok_servers.append(server)
-                    return ok_servers
+                    ok_servers.append(server)
+
+                return ok_servers
+            return "This mode does not have such a category"
+        return "such mode not found"
